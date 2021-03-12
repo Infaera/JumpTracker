@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Ant-Version: Apache Ant 1.10.4
+Created-By: 1.8.0_251-b08 (Oracle Corporation)
+Bundle-Name: Jump Tracker
+Bundle-Version: 1.0.1
+Bundle-Date: 2020-06-18 10:19:31 CDT
+Implementation-Title: Jump Tracker
+Implementation-Version: 1.0.1
+
