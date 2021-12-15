@@ -12,6 +12,8 @@ import java.io.*;
 import javax.swing.*;
 import javax.swing.event.*;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.plaf.*;
 import javax.swing.plaf.metal.*;
 import javax.swing.undo.UndoManager;
@@ -73,20 +75,20 @@ public class TrackerFrame extends javax.swing.JFrame {
     }
 
     private void initExtras() {
-        jTextArea1.getDocument().addUndoableEditListener(manager1);
-        jTextArea2.getDocument().addUndoableEditListener(manager2);
+        fldOptionDescription.getDocument().addUndoableEditListener(manager1);
+        fldOptionNotes.getDocument().addUndoableEditListener(manager2);
 
-        TrackerFrameMouseAdaptor myMouseAdaptor1 = new TrackerFrameMouseAdaptor(jList1, model1);
-        jList1.addMouseListener(myMouseAdaptor1);
-        jList1.addMouseMotionListener(myMouseAdaptor1);
-        TrackerFrameMouseAdaptor myMouseAdaptor2 = new TrackerFrameMouseAdaptor(jList2, model2);
-        jList2.addMouseListener(myMouseAdaptor2);
-        jList2.addMouseMotionListener(myMouseAdaptor2);
+        TrackerFrameMouseAdaptor myMouseAdaptor1 = new TrackerFrameMouseAdaptor(pnJumpList, model1);
+        pnJumpList.addMouseListener(myMouseAdaptor1);
+        pnJumpList.addMouseMotionListener(myMouseAdaptor1);
+        TrackerFrameMouseAdaptor myMouseAdaptor2 = new TrackerFrameMouseAdaptor(pnOptionList, model2);
+        pnOptionList.addMouseListener(myMouseAdaptor2);
+        pnOptionList.addMouseMotionListener(myMouseAdaptor2);
         TrackerFrameMouseAdaptor myMouseAdaptor3 = new TrackerFrameMouseAdaptor(jList3, model3);
         jList3.addMouseListener(myMouseAdaptor3);
         jList3.addMouseMotionListener(myMouseAdaptor3);
 
-        jList2.setCellRenderer(new DefaultListCellRenderer() {
+        pnOptionList.setCellRenderer(new DefaultListCellRenderer() {
             @Override
             public Component getListCellRendererComponent(JList list, Object value, int index,
                     boolean isSelected, boolean cellHasFocus) {
@@ -97,7 +99,7 @@ public class TrackerFrame extends javax.swing.JFrame {
                             setForeground(new Color(22, 22, 22));
                         } else if (theme) {
                             setForeground(new Color(222, 222, 222));
-                            for (int i : jList2.getSelectedIndices()) {
+                            for (int i : pnOptionList.getSelectedIndices()) {
                                 if (i == index) {
                                     setForeground(new Color(22, 22, 22));
                                 }
@@ -327,17 +329,17 @@ public class TrackerFrame extends javax.swing.JFrame {
         });
 
         if (!model1.isEmpty()) {
-            jList1.setSelectedIndex(0);
+            pnJumpList.setSelectedIndex(0);
         }
         if (!model2.isEmpty()) {
-            jList2.setSelectedIndex(0);
+            pnOptionList.setSelectedIndex(0);
         }
 
     }
 
     public void updateTypeComboBox() {
         defaultComboBoxModel1 = new DefaultComboBoxModel(jumper.getTypesArray());
-        jComboBox1.setModel(defaultComboBoxModel1);
+        cbOptionType.setModel(defaultComboBoxModel1);
     }
 
     private void resetJumper() {
@@ -382,13 +384,13 @@ public class TrackerFrame extends javax.swing.JFrame {
         jump.addOption(option);
         model2.addElement(option);
         option.type = tempType;
-        jComboBox1.setSelectedItem(tempType);
+        cbOptionType.setSelectedItem(tempType);
     }
 
     private void loadJump(int index) {
         jump = jumper.getJump(index);
         jTextField2.setText(jump.getName());
-        jSpinner1.setValue(jump.getPoints());
+        spnJumpBaseCP.setValue(jump.getPoints());
         setStepValue(jump.getStepValue());
         switch (jump.getStepValue()) {
             case 1:
@@ -418,7 +420,7 @@ public class TrackerFrame extends javax.swing.JFrame {
         jump.getOptionList().forEach((o) -> {
             model2.addElement(o);
         });
-        jList2.setSelectedIndex(jump.getSelectedOption());
+        pnOptionList.setSelectedIndex(jump.getSelectedOption());
     }
 
     private void loadOption(int index) {
@@ -427,14 +429,14 @@ public class TrackerFrame extends javax.swing.JFrame {
     }
 
     private void loadOption() {
-        jTextField3.setText(option.getName());
-        jTextArea1.setText(option.getDescription());
-        jTextArea1.setCaretPosition(0);
-        jTextArea2.setText(option.getNotes());
-        jTextArea2.setCaretPosition(0);
-        jSpinner2.setValue(option.getPoints());
-        jCheckBox1.setSelected(option.isChain());
-        jCheckBox4.setSelected(option.isActive());
+        fldOptionName.setText(option.getName());
+        fldOptionDescription.setText(option.getDescription());
+        fldOptionDescription.setCaretPosition(0);
+        fldOptionNotes.setText(option.getNotes());
+        fldOptionNotes.setCaretPosition(0);
+        spnOptionCost.setValue(option.getPoints());
+        chkChainOption.setSelected(option.isChain());
+        chkActiveOption.setSelected(option.isActive());
         defaultComboBoxModel1.setSelectedItem(option.getType());
 
         SwingUtilities.invokeLater(new LaterUpdater(option.getScrollPoint()));
@@ -567,43 +569,43 @@ public class TrackerFrame extends javax.swing.JFrame {
     }
 
     private void setDisplayValue(int value) {
-        jLabel2.setText("" + value);
+        lblAvailableCP.setText("" + value);
         if (value < 0) {
             if (theme) {
-                jLabel2.setForeground(LIGHT_RED.brighter().brighter());
+                lblAvailableCP.setForeground(LIGHT_RED.brighter().brighter());
             } else {
-                jLabel2.setForeground(DARK_RED);
+                lblAvailableCP.setForeground(DARK_RED);
             }
         } else {
             if (theme) {
-                jLabel2.setForeground(new Color(222, 222, 222));
+                lblAvailableCP.setForeground(new Color(222, 222, 222));
             } else {
-                jLabel2.setForeground(new Color(22, 22, 22));
+                lblAvailableCP.setForeground(new Color(22, 22, 22));
             }
         }
     }
 
     private void setTextFieldFonts(Font font) {
         this.setFont(font);
-        jTextArea1.setFont(font);
-        jTextArea2.setFont(font);
+        fldOptionDescription.setFont(font);
+        fldOptionNotes.setFont(font);
         jTextArea3.setFont(font);
         jTextArea4.setFont(font);
         jTextField1.setFont(font);
         jTextField2.setFont(font);
-        jTextField3.setFont(font);
+        fldOptionName.setFont(font);
         jTextField4.setFont(font);
-        jList1.setFont(font);
-        jList2.setFont(font);
+        pnJumpList.setFont(font);
+        pnOptionList.setFont(font);
         jList3.setFont(font);
-        jComboBox1.setFont(font);
+        cbOptionType.setFont(font);
         jComboBox2.setFont(font);
         jComboBox3.setFont(font);
 //        jSpinner1.setFont(font);
 //        jSpinner2.setFont(font);
 //        jSpinner3.setFont(font);
-        jLabel1.setFont(font);
-        jLabel2.setFont(font);
+        lblCP.setFont(font);
+        lblAvailableCP.setFont(font);
         jLabel3.setFont(font);
         jLabel4.setFont(font);
         jLabel5.setFont(font);
@@ -618,10 +620,10 @@ public class TrackerFrame extends javax.swing.JFrame {
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jList2 = new javax.swing.JList<>();
-        jSpinner1 = new javax.swing.JSpinner();
+        pnOptionList = new javax.swing.JList<>();
+        spnJumpBaseCP = new javax.swing.JSpinner();
         jScrollPane3 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea()
+        fldOptionDescription = new javax.swing.JTextArea()
         /*{
             @Override
             public boolean getScrollableTracksViewportHeight() {
@@ -633,23 +635,23 @@ public class TrackerFrame extends javax.swing.JFrame {
             }
         }*/
         ;
-        jLabel1 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        lblCP = new javax.swing.JLabel();
+        btnAddJump = new javax.swing.JButton();
         jScrollPane4 = new javax.swing.JScrollPane();
-        jTextArea2 = new javax.swing.JTextArea();
+        fldOptionNotes = new javax.swing.JTextArea();
         jTextField2 = new javax.swing.JTextField();
-        jCheckBox1 = new javax.swing.JCheckBox();
-        jLabel2 = new javax.swing.JLabel();
-        jButton3 = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
+        chkChainOption = new javax.swing.JCheckBox();
+        lblAvailableCP = new javax.swing.JLabel();
+        btnAddOption = new javax.swing.JButton();
+        btnSaveJumper = new javax.swing.JButton();
         jTextField1 = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jList1 = new javax.swing.JList<>();
-        jTextField3 = new javax.swing.JTextField();
-        jSpinner2 = new javax.swing.JSpinner();
-        jComboBox1 = new javax.swing.JComboBox<>();
-        jButton6 = new javax.swing.JButton();
-        jCheckBox4 = new javax.swing.JCheckBox();
+        pnJumpList = new javax.swing.JList<>();
+        fldOptionName = new javax.swing.JTextField();
+        spnOptionCost = new javax.swing.JSpinner();
+        cbOptionType = new javax.swing.JComboBox<>();
+        btnLoadJumper = new javax.swing.JButton();
+        chkActiveOption = new javax.swing.JCheckBox();
         jButton2 = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jComboBox2 = new javax.swing.JComboBox<>();
@@ -671,29 +673,32 @@ public class TrackerFrame extends javax.swing.JFrame {
         jComboBox3 = new javax.swing.JComboBox<>();
         jCheckBox5 = new javax.swing.JCheckBox();
         jMenuBar1 = new javax.swing.JMenuBar();
-        jMenu1 = new javax.swing.JMenu();
-        jMenuItem4 = new javax.swing.JMenuItem();
-        jMenu2 = new javax.swing.JMenu();
-        jMenuItem3 = new javax.swing.JMenuItem();
-        jMenuItem2 = new javax.swing.JMenuItem();
-        jMenuItem1 = new javax.swing.JMenuItem();
+        mnuFile = new javax.swing.JMenu();
+        mniImportJumperCSV = new javax.swing.JMenuItem();
+        mniImportJumpCSV = new javax.swing.JMenuItem();
+        jSeparator10 = new javax.swing.JPopupMenu.Separator();
+        mniExit = new javax.swing.JMenuItem();
+        mnuJumper = new javax.swing.JMenu();
+        mniNewJumper = new javax.swing.JMenuItem();
+        mniLoadJumper = new javax.swing.JMenuItem();
+        mniSaveJumper = new javax.swing.JMenuItem();
         jSeparator9 = new javax.swing.JPopupMenu.Separator();
-        jMenuItem21 = new javax.swing.JMenuItem();
+        mniBackupJumper = new javax.swing.JMenuItem();
         jSeparator8 = new javax.swing.JPopupMenu.Separator();
-        jCheckBoxMenuItem3 = new javax.swing.JCheckBoxMenuItem();
+        mniAutoSave = new javax.swing.JCheckBoxMenuItem();
         jSeparator2 = new javax.swing.JPopupMenu.Separator();
-        jMenuItem5 = new javax.swing.JMenuItem();
-        jMenu3 = new javax.swing.JMenu();
-        jMenuItem22 = new javax.swing.JMenuItem();
+        mniDeleteJumper = new javax.swing.JMenuItem();
+        mnuJump = new javax.swing.JMenu();
+        mniAddJump = new javax.swing.JMenuItem();
         jSeparator5 = new javax.swing.JPopupMenu.Separator();
         jMenuItem7 = new javax.swing.JMenuItem();
         jMenuItem6 = new javax.swing.JMenuItem();
         jSeparator7 = new javax.swing.JPopupMenu.Separator();
-        jMenuItem14 = new javax.swing.JMenuItem();
-        jMenuItem13 = new javax.swing.JMenuItem();
+        mniExportJump = new javax.swing.JMenuItem();
+        mniImportJump = new javax.swing.JMenuItem();
         jSeparator3 = new javax.swing.JPopupMenu.Separator();
-        jMenuItem18 = new javax.swing.JMenuItem();
-        jMenu7 = new javax.swing.JMenu();
+        mniDeleteJump = new javax.swing.JMenuItem();
+        mnuOption = new javax.swing.JMenu();
         jMenuItem23 = new javax.swing.JMenuItem();
         jSeparator6 = new javax.swing.JPopupMenu.Separator();
         jMenuItem16 = new javax.swing.JMenuItem();
@@ -701,7 +706,7 @@ public class TrackerFrame extends javax.swing.JFrame {
         jMenuItem11 = new javax.swing.JMenuItem();
         jSeparator4 = new javax.swing.JPopupMenu.Separator();
         jMenuItem19 = new javax.swing.JMenuItem();
-        jMenu5 = new javax.swing.JMenu();
+        mnuConfig = new javax.swing.JMenu();
         jMenu6 = new javax.swing.JMenu();
         jRadioButtonMenuItem1 = new javax.swing.JRadioButtonMenuItem();
         jRadioButtonMenuItem2 = new javax.swing.JRadioButtonMenuItem();
@@ -714,7 +719,7 @@ public class TrackerFrame extends javax.swing.JFrame {
         jCheckBoxMenuItem1 = new javax.swing.JCheckBoxMenuItem();
         jCheckBoxMenuItem2 = new javax.swing.JCheckBoxMenuItem();
         jMenuItem17 = new javax.swing.JMenuItem();
-        jMenu4 = new javax.swing.JMenu();
+        mnuHelp = new javax.swing.JMenu();
         jMenuItem8 = new javax.swing.JMenuItem();
         jMenuItem15 = new javax.swing.JMenuItem();
         jMenuItem9 = new javax.swing.JMenuItem();
@@ -745,48 +750,47 @@ public class TrackerFrame extends javax.swing.JFrame {
         jPanel1.setPreferredSize(new java.awt.Dimension(600, 600));
 
         model2 = new DefaultListModel<String>();
-        jList2.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
-        jList2.setModel(model2);
-        jList2.setToolTipText("Selection List");
-        jList2.addMouseListener(new java.awt.event.MouseAdapter() {
+        pnOptionList.setModel(model2);
+        pnOptionList.setToolTipText("Selection List");
+        pnOptionList.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
-                jList2MousePressed(evt);
+                pnOptionListMousePressed(evt);
             }
         });
-        jList2.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+        pnOptionList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
             public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
-                jList2ValueChanged(evt);
+                pnOptionListValueChanged(evt);
             }
         });
-        jScrollPane2.setViewportView(jList2);
+        jScrollPane2.setViewportView(pnOptionList);
 
-        jSpinner1.setToolTipText("Points for the Jump");
-        jSpinner1.setValue(1000);
-        spinnerModel1 = (SpinnerNumberModel) new SpinnerNumberModel();// jSpinner1.getModel();
+        spnJumpBaseCP.setToolTipText("Points for the Jump");
+        spnJumpBaseCP.setValue(1000);
+        spinnerModel1 = (SpinnerNumberModel) new SpinnerNumberModel();// spnJumpBaseCP.getModel();
         spinnerModel1.setStepSize(25);
-        jSpinner1.setModel(spinnerModel1);
-        jSpinner1.addChangeListener(new javax.swing.event.ChangeListener() {
+        spnJumpBaseCP.setModel(spinnerModel1);
+        spnJumpBaseCP.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                jSpinner1StateChanged(evt);
+                spnJumpBaseCPStateChanged(evt);
             }
         });
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jTextArea1.setLineWrap(true);
-        jTextArea1.setRows(5);
-        jTextArea1.setToolTipText("Description");
-        jTextArea1.setWrapStyleWord(true);
-        jTextArea1.setMargin(new java.awt.Insets(5, 5, 5, 5));
-        jTextArea1.addKeyListener(new java.awt.event.KeyAdapter() {
+        fldOptionDescription.setColumns(20);
+        fldOptionDescription.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        fldOptionDescription.setLineWrap(true);
+        fldOptionDescription.setRows(5);
+        fldOptionDescription.setToolTipText("Description");
+        fldOptionDescription.setWrapStyleWord(true);
+        fldOptionDescription.setMargin(new java.awt.Insets(5, 5, 5, 5));
+        fldOptionDescription.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                jTextArea1KeyPressed(evt);
+                fldOptionDescriptionKeyPressed(evt);
             }
             public void keyReleased(java.awt.event.KeyEvent evt) {
-                jTextArea1KeyReleased(evt);
+                fldOptionDescriptionKeyReleased(evt);
             }
         });
-        jScrollPane3.setViewportView(jTextArea1);
+        jScrollPane3.setViewportView(fldOptionDescription);
         jScrollPane3.getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener(){
             @Override
             public void adjustmentValueChanged(AdjustmentEvent evt) {
@@ -794,32 +798,32 @@ public class TrackerFrame extends javax.swing.JFrame {
             }
         });
 
-        jLabel1.setText("CP");
+        lblCP.setText("CP");
 
-        jButton1.setText("Add Jump");
-        jButton1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btnAddJump.setText("Add Jump");
+        btnAddJump.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        btnAddJump.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btnAddJumpActionPerformed(evt);
             }
         });
 
-        jTextArea2.setColumns(20);
-        jTextArea2.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        jTextArea2.setLineWrap(true);
-        jTextArea2.setRows(5);
-        jTextArea2.setToolTipText("Notes");
-        jTextArea2.setWrapStyleWord(true);
-        jTextArea2.setMargin(new java.awt.Insets(5, 5, 5, 5));
-        jTextArea2.addKeyListener(new java.awt.event.KeyAdapter() {
+        fldOptionNotes.setColumns(20);
+        fldOptionNotes.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        fldOptionNotes.setLineWrap(true);
+        fldOptionNotes.setRows(5);
+        fldOptionNotes.setToolTipText("Notes");
+        fldOptionNotes.setWrapStyleWord(true);
+        fldOptionNotes.setMargin(new java.awt.Insets(5, 5, 5, 5));
+        fldOptionNotes.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                jTextArea2KeyPressed(evt);
+                fldOptionNotesKeyPressed(evt);
             }
             public void keyReleased(java.awt.event.KeyEvent evt) {
-                jTextArea2KeyReleased(evt);
+                fldOptionNotesKeyReleased(evt);
             }
         });
-        jScrollPane4.setViewportView(jTextArea2);
+        jScrollPane4.setViewportView(fldOptionNotes);
 
         jTextField2.setToolTipText("Jumpchain Document Name");
         jTextField2.setMargin(new java.awt.Insets(0, 3, 0, 0));
@@ -829,29 +833,29 @@ public class TrackerFrame extends javax.swing.JFrame {
             }
         });
 
-        jCheckBox1.setToolTipText("Chain");
-        jCheckBox1.addActionListener(new java.awt.event.ActionListener() {
+        chkChainOption.setToolTipText("Chain");
+        chkChainOption.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jCheckBox1ActionPerformed(evt);
+                chkChainOptionActionPerformed(evt);
             }
         });
 
-        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
-        jLabel2.setText("1000");
-        jLabel2.setToolTipText("End Value");
+        lblAvailableCP.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
+        lblAvailableCP.setText("1000");
+        lblAvailableCP.setToolTipText("End Value");
 
-        jButton3.setText("Add Option");
-        jButton3.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
+        btnAddOption.setText("Add Option");
+        btnAddOption.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        btnAddOption.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                btnAddOptionActionPerformed(evt);
             }
         });
 
-        jButton5.setText("Save");
-        jButton5.addActionListener(new java.awt.event.ActionListener() {
+        btnSaveJumper.setText("Save");
+        btnSaveJumper.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton5ActionPerformed(evt);
+                btnSaveJumperActionPerformed(evt);
             }
         });
 
@@ -864,59 +868,58 @@ public class TrackerFrame extends javax.swing.JFrame {
         });
 
         model1 = new DefaultListModel<String>();
-        jList1.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
-        jList1.setModel(model1);
-        jList1.setToolTipText("CYOA List");
-        jList1.addMouseListener(new java.awt.event.MouseAdapter() {
+        pnJumpList.setModel(model1);
+        pnJumpList.setToolTipText("CYOA List");
+        pnJumpList.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
-                jList1MousePressed(evt);
+                pnJumpListMousePressed(evt);
             }
         });
-        jList1.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+        pnJumpList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
             public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
-                jList1ValueChanged(evt);
+                pnJumpListValueChanged(evt);
             }
         });
-        jScrollPane1.setViewportView(jList1);
+        jScrollPane1.setViewportView(pnJumpList);
 
-        jTextField3.setToolTipText("Option Name");
-        jTextField3.setMargin(new java.awt.Insets(0, 3, 0, 0));
-        jTextField3.addKeyListener(new java.awt.event.KeyAdapter() {
+        fldOptionName.setToolTipText("Option Name");
+        fldOptionName.setMargin(new java.awt.Insets(0, 3, 0, 0));
+        fldOptionName.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
-                jTextField3KeyReleased(evt);
+                fldOptionNameKeyReleased(evt);
             }
         });
 
         spinnerModel2 = (SpinnerNumberModel) new SpinnerNumberModel();//jSpinner2.getModel();
         spinnerModel2.setStepSize(25);
-        jSpinner2.setModel(spinnerModel2);
-        jSpinner2.setToolTipText("Option Value");
-        jSpinner2.addChangeListener(new javax.swing.event.ChangeListener() {
+        spnOptionCost.setModel(spinnerModel2);
+        spnOptionCost.setToolTipText("Option Value");
+        spnOptionCost.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                jSpinner2StateChanged(evt);
+                spnOptionCostStateChanged(evt);
             }
         });
 
         defaultComboBoxModel1 = new DefaultComboBoxModel();
-        jComboBox1.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
-        jComboBox1.setModel(defaultComboBoxModel1);
-        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
+        cbOptionType.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
+        cbOptionType.setModel(defaultComboBoxModel1);
+        cbOptionType.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jComboBox1ActionPerformed(evt);
+                cbOptionTypeActionPerformed(evt);
             }
         });
 
-        jButton6.setText("Load");
-        jButton6.addActionListener(new java.awt.event.ActionListener() {
+        btnLoadJumper.setText("Load");
+        btnLoadJumper.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton6ActionPerformed(evt);
+                btnLoadJumperActionPerformed(evt);
             }
         });
 
-        jCheckBox4.setToolTipText("Active");
-        jCheckBox4.addActionListener(new java.awt.event.ActionListener() {
+        chkActiveOption.setToolTipText("Active");
+        chkActiveOption.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jCheckBox4ActionPerformed(evt);
+                chkActiveOptionActionPerformed(evt);
             }
         });
 
@@ -934,37 +937,37 @@ public class TrackerFrame extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(jButton1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnAddJump, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jTextField1, javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnLoadJumper, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(btnSaveJumper, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel1)
+                        .addComponent(lblCP)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(spnJumpBaseCP, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(jTextField2, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE)
-                    .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(lblAvailableCP, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jTextField2)
+                    .addComponent(btnAddOption, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                     .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 241, Short.MAX_VALUE)
-                    .addComponent(jTextField3)
+                    .addComponent(fldOptionName)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jComboBox1, 0, 121, Short.MAX_VALUE)
+                        .addComponent(cbOptionType, 0, 121, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jSpinner2, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(spnOptionCost, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jCheckBox4)
+                        .addComponent(chkActiveOption)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jCheckBox1))
+                        .addComponent(chkChainOption))
                     .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 241, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -973,7 +976,7 @@ public class TrackerFrame extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(fldOptionName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -981,20 +984,20 @@ public class TrackerFrame extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jLabel2)
-                                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jSpinner2, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(spnJumpBaseCP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(lblAvailableCP)
+                                .addComponent(cbOptionType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(spnOptionCost, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGap(2, 2, 2)
-                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 13, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(lblCP, javax.swing.GroupLayout.PREFERRED_SIZE, 13, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                                .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(btnLoadJumper, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                                .addComponent(btnSaveJumper, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jButton3)
-                            .addComponent(jButton1))
+                            .addComponent(btnAddOption)
+                            .addComponent(btnAddJump))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jScrollPane1)
@@ -1004,8 +1007,8 @@ public class TrackerFrame extends javax.swing.JFrame {
                                 .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jCheckBox4)
-                            .addComponent(jCheckBox1))
+                            .addComponent(chkActiveOption)
+                            .addComponent(chkChainOption))
                         .addGap(18, 18, 18)
                         .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 250, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -1024,7 +1027,7 @@ public class TrackerFrame extends javax.swing.JFrame {
             }
         });
 
-        spinnerModel3 = (SpinnerNumberModel) new SpinnerNumberModel();// jSpinner1.getModel();
+        spinnerModel3 = (SpinnerNumberModel) new SpinnerNumberModel();// spnJumpBaseCP.getModel();
         spinnerModel3.setStepSize(25);
         jSpinner3.setModel(spinnerModel3);
         jSpinner3.setToolTipText("Search by Points");
@@ -1049,7 +1052,6 @@ public class TrackerFrame extends javax.swing.JFrame {
         });
 
         model3 = new DefaultListModel<String>();
-        jList3.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         jList3.setModel(model3);
         jList3.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
             public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
@@ -1181,90 +1183,107 @@ public class TrackerFrame extends javax.swing.JFrame {
 
         jTabbedPane1.addTab("Search", jPanel2);
 
-        jMenu1.setText("File");
+        mnuFile.setText("File");
 
-        jMenuItem4.setText("Exit");
-        jMenuItem4.setToolTipText("Close Program");
-        jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
+        mniImportJumperCSV.setText("Import Jumper CSV");
+        mniImportJumperCSV.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem4ActionPerformed(evt);
+                mniImportJumperCSVActionPerformed(evt);
             }
         });
-        jMenu1.add(jMenuItem4);
+        mnuFile.add(mniImportJumperCSV);
 
-        jMenuBar1.add(jMenu1);
-
-        jMenu2.setText("Jumper");
-
-        jMenuItem3.setText("New");
-        jMenuItem3.setToolTipText("Create New Jumper");
-        jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
+        mniImportJumpCSV.setText("Import Jump CSV");
+        mniImportJumpCSV.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem3ActionPerformed(evt);
+                mniImportJumpCSVActionPerformed(evt);
             }
         });
-        jMenu2.add(jMenuItem3);
+        mnuFile.add(mniImportJumpCSV);
+        mnuFile.add(jSeparator10);
 
-        jMenuItem2.setText("Load");
-        jMenuItem2.setToolTipText("Load Existing Jumper");
-        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+        mniExit.setText("Exit");
+        mniExit.setToolTipText("Close Program");
+        mniExit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem2ActionPerformed(evt);
+                mniExitActionPerformed(evt);
             }
         });
-        jMenu2.add(jMenuItem2);
+        mnuFile.add(mniExit);
 
-        jMenuItem1.setText("Save");
-        jMenuItem1.setToolTipText("Save Jumper");
-        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+        jMenuBar1.add(mnuFile);
+
+        mnuJumper.setText("Jumper");
+
+        mniNewJumper.setText("New");
+        mniNewJumper.setToolTipText("Create New Jumper");
+        mniNewJumper.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem1ActionPerformed(evt);
+                mniNewJumperActionPerformed(evt);
             }
         });
-        jMenu2.add(jMenuItem1);
-        jMenu2.add(jSeparator9);
+        mnuJumper.add(mniNewJumper);
 
-        jMenuItem21.setText("Backup");
-        jMenuItem21.addActionListener(new java.awt.event.ActionListener() {
+        mniLoadJumper.setText("Load");
+        mniLoadJumper.setToolTipText("Load Existing Jumper");
+        mniLoadJumper.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem21ActionPerformed(evt);
+                mniLoadJumperActionPerformed(evt);
             }
         });
-        jMenu2.add(jMenuItem21);
-        jMenu2.add(jSeparator8);
+        mnuJumper.add(mniLoadJumper);
 
-        jCheckBoxMenuItem3.setSelected(true);
-        jCheckBoxMenuItem3.setText("Auto Save");
-        jCheckBoxMenuItem3.setToolTipText("Always On at Start");
-        jCheckBoxMenuItem3.addActionListener(new java.awt.event.ActionListener() {
+        mniSaveJumper.setText("Save");
+        mniSaveJumper.setToolTipText("Save Jumper");
+        mniSaveJumper.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jCheckBoxMenuItem3ActionPerformed(evt);
+                mniSaveJumperActionPerformed(evt);
             }
         });
-        jMenu2.add(jCheckBoxMenuItem3);
-        jMenu2.add(jSeparator2);
+        mnuJumper.add(mniSaveJumper);
+        mnuJumper.add(jSeparator9);
 
-        jMenuItem5.setText("Delete");
-        jMenuItem5.setToolTipText("Delete a Jumper");
-        jMenuItem5.addActionListener(new java.awt.event.ActionListener() {
+        mniBackupJumper.setText("Backup");
+        mniBackupJumper.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem5ActionPerformed(evt);
+                mniBackupJumperActionPerformed(evt);
             }
         });
-        jMenu2.add(jMenuItem5);
+        mnuJumper.add(mniBackupJumper);
+        mnuJumper.add(jSeparator8);
 
-        jMenuBar1.add(jMenu2);
-
-        jMenu3.setText("Jump");
-
-        jMenuItem22.setText("Add Jump");
-        jMenuItem22.addActionListener(new java.awt.event.ActionListener() {
+        mniAutoSave.setSelected(true);
+        mniAutoSave.setText("Auto Save");
+        mniAutoSave.setToolTipText("Always On at Start");
+        mniAutoSave.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem22ActionPerformed(evt);
+                mniAutoSaveActionPerformed(evt);
             }
         });
-        jMenu3.add(jMenuItem22);
-        jMenu3.add(jSeparator5);
+        mnuJumper.add(mniAutoSave);
+        mnuJumper.add(jSeparator2);
+
+        mniDeleteJumper.setText("Delete");
+        mniDeleteJumper.setToolTipText("Delete a Jumper");
+        mniDeleteJumper.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mniDeleteJumperActionPerformed(evt);
+            }
+        });
+        mnuJumper.add(mniDeleteJumper);
+
+        jMenuBar1.add(mnuJumper);
+
+        mnuJump.setText("Jump");
+
+        mniAddJump.setText("Add Jump");
+        mniAddJump.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mniAddJumpActionPerformed(evt);
+            }
+        });
+        mnuJump.add(mniAddJump);
+        mnuJump.add(jSeparator5);
 
         jMenuItem7.setText("Output Selection");
         jMenuItem7.setToolTipText("Copy Jump Selections to the Clipboard");
@@ -1273,7 +1292,7 @@ public class TrackerFrame extends javax.swing.JFrame {
                 jMenuItem7ActionPerformed(evt);
             }
         });
-        jMenu3.add(jMenuItem7);
+        mnuJump.add(jMenuItem7);
 
         jMenuItem6.setText("Output Details");
         jMenuItem6.setToolTipText("Copy Jump Details to Clipboard");
@@ -1282,37 +1301,37 @@ public class TrackerFrame extends javax.swing.JFrame {
                 jMenuItem6ActionPerformed(evt);
             }
         });
-        jMenu3.add(jMenuItem6);
-        jMenu3.add(jSeparator7);
+        mnuJump.add(jMenuItem6);
+        mnuJump.add(jSeparator7);
 
-        jMenuItem14.setText("Export Jump");
-        jMenuItem14.addActionListener(new java.awt.event.ActionListener() {
+        mniExportJump.setText("Export Jump");
+        mniExportJump.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem14ActionPerformed(evt);
+                mniExportJumpActionPerformed(evt);
             }
         });
-        jMenu3.add(jMenuItem14);
+        mnuJump.add(mniExportJump);
 
-        jMenuItem13.setText("Import Jump");
-        jMenuItem13.addActionListener(new java.awt.event.ActionListener() {
+        mniImportJump.setText("Import Jump");
+        mniImportJump.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem13ActionPerformed(evt);
+                mniImportJumpActionPerformed(evt);
             }
         });
-        jMenu3.add(jMenuItem13);
-        jMenu3.add(jSeparator3);
+        mnuJump.add(mniImportJump);
+        mnuJump.add(jSeparator3);
 
-        jMenuItem18.setText("Delete Jump");
-        jMenuItem18.addActionListener(new java.awt.event.ActionListener() {
+        mniDeleteJump.setText("Delete Jump");
+        mniDeleteJump.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem18ActionPerformed(evt);
+                mniDeleteJumpActionPerformed(evt);
             }
         });
-        jMenu3.add(jMenuItem18);
+        mnuJump.add(mniDeleteJump);
 
-        jMenuBar1.add(jMenu3);
+        jMenuBar1.add(mnuJump);
 
-        jMenu7.setText("Option");
+        mnuOption.setText("Option");
 
         jMenuItem23.setText("Add Option");
         jMenuItem23.addActionListener(new java.awt.event.ActionListener() {
@@ -1320,8 +1339,8 @@ public class TrackerFrame extends javax.swing.JFrame {
                 jMenuItem23ActionPerformed(evt);
             }
         });
-        jMenu7.add(jMenuItem23);
-        jMenu7.add(jSeparator6);
+        mnuOption.add(jMenuItem23);
+        mnuOption.add(jSeparator6);
 
         jMenuItem16.setText("Copy To");
         jMenuItem16.addActionListener(new java.awt.event.ActionListener() {
@@ -1329,7 +1348,7 @@ public class TrackerFrame extends javax.swing.JFrame {
                 jMenuItem16ActionPerformed(evt);
             }
         });
-        jMenu7.add(jMenuItem16);
+        mnuOption.add(jMenuItem16);
 
         jMenuItem10.setText("Set All Active");
         jMenuItem10.addActionListener(new java.awt.event.ActionListener() {
@@ -1337,7 +1356,7 @@ public class TrackerFrame extends javax.swing.JFrame {
                 jMenuItem10ActionPerformed(evt);
             }
         });
-        jMenu7.add(jMenuItem10);
+        mnuOption.add(jMenuItem10);
 
         jMenuItem11.setText("Set All Inactive");
         jMenuItem11.addActionListener(new java.awt.event.ActionListener() {
@@ -1345,8 +1364,8 @@ public class TrackerFrame extends javax.swing.JFrame {
                 jMenuItem11ActionPerformed(evt);
             }
         });
-        jMenu7.add(jMenuItem11);
-        jMenu7.add(jSeparator4);
+        mnuOption.add(jMenuItem11);
+        mnuOption.add(jSeparator4);
 
         jMenuItem19.setText("Delete Option");
         jMenuItem19.addActionListener(new java.awt.event.ActionListener() {
@@ -1354,11 +1373,11 @@ public class TrackerFrame extends javax.swing.JFrame {
                 jMenuItem19ActionPerformed(evt);
             }
         });
-        jMenu7.add(jMenuItem19);
+        mnuOption.add(jMenuItem19);
 
-        jMenuBar1.add(jMenu7);
+        jMenuBar1.add(mnuOption);
 
-        jMenu5.setText("Config");
+        mnuConfig.setText("Config");
 
         jMenu6.setText("Step Value");
 
@@ -1423,7 +1442,7 @@ public class TrackerFrame extends javax.swing.JFrame {
             }
         });
 
-        jMenu5.add(jMenu6);
+        mnuConfig.add(jMenu6);
 
         jMenuItem20.setText("Change Fonts");
         jMenuItem20.addActionListener(new java.awt.event.ActionListener() {
@@ -1431,7 +1450,7 @@ public class TrackerFrame extends javax.swing.JFrame {
                 jMenuItem20ActionPerformed(evt);
             }
         });
-        jMenu5.add(jMenuItem20);
+        mnuConfig.add(jMenuItem20);
 
         jMenuItem12.setText("Edit Type List");
         jMenuItem12.addActionListener(new java.awt.event.ActionListener() {
@@ -1439,11 +1458,11 @@ public class TrackerFrame extends javax.swing.JFrame {
                 jMenuItem12ActionPerformed(evt);
             }
         });
-        jMenu5.add(jMenuItem12);
+        mnuConfig.add(jMenuItem12);
 
         jCheckBoxMenuItem1.setSelected(true);
         jCheckBoxMenuItem1.setText("Auto Active");
-        jMenu5.add(jCheckBoxMenuItem1);
+        mnuConfig.add(jCheckBoxMenuItem1);
 
         jCheckBoxMenuItem2.setSelected(true);
         jCheckBoxMenuItem2.setText("Linked Points");
@@ -1452,7 +1471,7 @@ public class TrackerFrame extends javax.swing.JFrame {
                 jCheckBoxMenuItem2ActionPerformed(evt);
             }
         });
-        jMenu5.add(jCheckBoxMenuItem2);
+        mnuConfig.add(jCheckBoxMenuItem2);
 
         jMenuItem17.setText("Theme Swap (WIP)");
         jMenuItem17.addActionListener(new java.awt.event.ActionListener() {
@@ -1460,11 +1479,11 @@ public class TrackerFrame extends javax.swing.JFrame {
                 jMenuItem17ActionPerformed(evt);
             }
         });
-        jMenu5.add(jMenuItem17);
+        mnuConfig.add(jMenuItem17);
 
-        jMenuBar1.add(jMenu5);
+        jMenuBar1.add(mnuConfig);
 
-        jMenu4.setText("Help");
+        mnuHelp.setText("Help");
 
         jMenuItem8.setText("About");
         jMenuItem8.addActionListener(new java.awt.event.ActionListener() {
@@ -1472,7 +1491,7 @@ public class TrackerFrame extends javax.swing.JFrame {
                 jMenuItem8ActionPerformed(evt);
             }
         });
-        jMenu4.add(jMenuItem8);
+        mnuHelp.add(jMenuItem8);
 
         jMenuItem15.setText("Update");
         jMenuItem15.setToolTipText("");
@@ -1481,7 +1500,7 @@ public class TrackerFrame extends javax.swing.JFrame {
                 jMenuItem15ActionPerformed(evt);
             }
         });
-        jMenu4.add(jMenuItem15);
+        mnuHelp.add(jMenuItem15);
 
         jMenuItem9.setText("Links");
         jMenuItem9.setToolTipText("");
@@ -1490,9 +1509,9 @@ public class TrackerFrame extends javax.swing.JFrame {
                 jMenuItem9ActionPerformed(evt);
             }
         });
-        jMenu4.add(jMenuItem9);
+        mnuHelp.add(jMenuItem9);
 
-        jMenuBar1.add(jMenu4);
+        jMenuBar1.add(mnuHelp);
 
         setJMenuBar(jMenuBar1);
 
@@ -1500,7 +1519,7 @@ public class TrackerFrame extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 600, Short.MAX_VALUE)
+            .addComponent(jTabbedPane1)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1512,18 +1531,18 @@ public class TrackerFrame extends javax.swing.JFrame {
 
     // <editor-fold defaultstate="collapsed" desc="Event Code">  
     // Select Delete File Menu Item
-    private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
+    private void mniDeleteJumperActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniDeleteJumperActionPerformed
         jTabbedPane1.setSelectedIndex(0);
         deleteJumperSelection();
-    }//GEN-LAST:event_jMenuItem5ActionPerformed
+    }//GEN-LAST:event_mniDeleteJumperActionPerformed
 
     // Exit Menu Item
-    private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
+    private void mniExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniExitActionPerformed
         this.dispose();
-    }//GEN-LAST:event_jMenuItem4ActionPerformed
+    }//GEN-LAST:event_mniExitActionPerformed
 
     // New Jumper Menu Item
-    private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
+    private void mniNewJumperActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniNewJumperActionPerformed
         if (jTextField1.getText().equals("Jumper")) {
             int dialogResult = JOptionPane.showConfirmDialog(this,
                     "Please give your Jumper a new Name and Save."
@@ -1541,20 +1560,20 @@ public class TrackerFrame extends javax.swing.JFrame {
         jTextField1.selectAll();
         //createJumper();
         //loadInfo();
-    }//GEN-LAST:event_jMenuItem3ActionPerformed
+    }//GEN-LAST:event_mniNewJumperActionPerformed
 
     // Select Load Jumper File Menu Item
-    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+    private void mniLoadJumperActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniLoadJumperActionPerformed
         jTabbedPane1.setSelectedIndex(0);
         saveJumper();
         loadJumperSelection();
-    }//GEN-LAST:event_jMenuItem2ActionPerformed
+    }//GEN-LAST:event_mniLoadJumperActionPerformed
 
     // Save Jumper File Menu Item
-    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+    private void mniSaveJumperActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniSaveJumperActionPerformed
         //jTabbedPane1.setSelectedIndex(0);
         saveJumper();
-    }//GEN-LAST:event_jMenuItem1ActionPerformed
+    }//GEN-LAST:event_mniSaveJumperActionPerformed
 
     private void jMenuItem6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem6ActionPerformed
         Toolkit.getDefaultToolkit().getSystemClipboard()
@@ -1637,14 +1656,14 @@ public class TrackerFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jComboBox2ActionPerformed
 
     // Load Jumper File Button
-    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
+    private void btnLoadJumperActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoadJumperActionPerformed
         saveJumper();
         loadJumperSelection();
-    }//GEN-LAST:event_jButton6ActionPerformed
+    }//GEN-LAST:event_btnLoadJumperActionPerformed
 
     // Option Types
-    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
-        String item = (String) jComboBox1.getSelectedItem();
+    private void cbOptionTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbOptionTypeActionPerformed
+        String item = (String) cbOptionType.getSelectedItem();
         option.setType(item);
 //        String[] newList = new String[jComboBox1.getItemCount()];
 //        newList[0] = (String) jComboBox1.getSelectedItem();
@@ -1653,31 +1672,31 @@ public class TrackerFrame extends javax.swing.JFrame {
 //                newList[i] = jComboBox1.getItemAt(i);
 //            }
 //        }
-    }//GEN-LAST:event_jComboBox1ActionPerformed
+    }//GEN-LAST:event_cbOptionTypeActionPerformed
 
     // Option Points
-    private void jSpinner2StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSpinner2StateChanged
-        option.setPoints((Integer) jSpinner2.getValue());
+    private void spnOptionCostStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_spnOptionCostStateChanged
+        option.setPoints((Integer) spnOptionCost.getValue());
         calcDisplayValue();
         //jLabel2.setText("" + jump.calcCosts());
-    }//GEN-LAST:event_jSpinner2StateChanged
+    }//GEN-LAST:event_spnOptionCostStateChanged
 
     // Option Name Field
-    private void jTextField3KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField3KeyReleased
-        option.setName(jTextField3.getText());
-        model2.setElementAt(option, jList2.getSelectedIndex());
-    }//GEN-LAST:event_jTextField3KeyReleased
+    private void fldOptionNameKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_fldOptionNameKeyReleased
+        option.setName(fldOptionName.getText());
+        model2.setElementAt(option, pnOptionList.getSelectedIndex());
+    }//GEN-LAST:event_fldOptionNameKeyReleased
 
     //Jump List Change
-    private void jList1ValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_jList1ValueChanged
+    private void pnJumpListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_pnJumpListValueChanged
         if (mouseIsDragging) {
             return;
         }
-        if (jList1.getSelectedIndex() != -1) {
+        if (pnJumpList.getSelectedIndex() != -1) {
             organizeOptions();
-            loadJump(jList1.getSelectedIndex());
+            loadJump(pnJumpList.getSelectedIndex());
         }
-    }//GEN-LAST:event_jList1ValueChanged
+    }//GEN-LAST:event_pnJumpListValueChanged
 
     // Jumper Name Field
     private void jTextField1KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField1KeyReleased
@@ -1685,23 +1704,23 @@ public class TrackerFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextField1KeyReleased
 
     // saveJumperButton
-    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+    private void btnSaveJumperActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveJumperActionPerformed
         saveJumper();
-    }//GEN-LAST:event_jButton5ActionPerformed
+    }//GEN-LAST:event_btnSaveJumperActionPerformed
 
     //Add Option Button
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+    private void btnAddOptionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddOptionActionPerformed
         newOption();
-        jList2.setSelectedValue(option, true);
-        jTextField3.requestFocus();
-        jTextField3.selectAll();
+        pnOptionList.setSelectedValue(option, true);
+        fldOptionName.requestFocus();
+        fldOptionName.selectAll();
         //save();
-    }//GEN-LAST:event_jButton3ActionPerformed
+    }//GEN-LAST:event_btnAddOptionActionPerformed
 
     // Chain Check Box
-    private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
-        option.setChain(jCheckBox1.isSelected());
-    }//GEN-LAST:event_jCheckBox1ActionPerformed
+    private void chkChainOptionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkChainOptionActionPerformed
+        option.setChain(chkChainOption.isSelected());
+    }//GEN-LAST:event_chkChainOptionActionPerformed
 
     // Jump Name Field
     private void jTextField2KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField2KeyReleased
@@ -1709,21 +1728,21 @@ public class TrackerFrame extends javax.swing.JFrame {
         jump.getOptionList().forEach((o) -> {
             o.setJumpName(jump.name);
         });
-        model1.setElementAt(jump, jList1.getSelectedIndex());
+        model1.setElementAt(jump, pnJumpList.getSelectedIndex());
     }//GEN-LAST:event_jTextField2KeyReleased
 
     // Option Note Area
-    private void jTextArea2KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextArea2KeyReleased
-        option.setNotes(jTextArea2.getText());
-    }//GEN-LAST:event_jTextArea2KeyReleased
+    private void fldOptionNotesKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_fldOptionNotesKeyReleased
+        option.setNotes(fldOptionNotes.getText());
+    }//GEN-LAST:event_fldOptionNotesKeyReleased
 
     // Add Jump Button
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void btnAddJumpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddJumpActionPerformed
         newJump();
-        jList1.setSelectedValue(jump, true);
+        pnJumpList.setSelectedValue(jump, true);
         jTextField2.requestFocus();
         jTextField2.selectAll();
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_btnAddJumpActionPerformed
 
     // Option Description Area
     class Edit {
@@ -1742,28 +1761,28 @@ public class TrackerFrame extends javax.swing.JFrame {
     }
 
     //ArrayList<Edit> dal = new ArrayList<>();
-    private void jTextArea1KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextArea1KeyReleased
-        String currentText = jTextArea1.getText();
+    private void fldOptionDescriptionKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_fldOptionDescriptionKeyReleased
+        String currentText = fldOptionDescription.getText();
         option.setDescription(currentText);
-    }//GEN-LAST:event_jTextArea1KeyReleased
+    }//GEN-LAST:event_fldOptionDescriptionKeyReleased
 
     // Jump Points
-    private void jSpinner1StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSpinner1StateChanged
-        jump.setPoints((Integer) jSpinner1.getValue());
+    private void spnJumpBaseCPStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_spnJumpBaseCPStateChanged
+        jump.setPoints((Integer) spnJumpBaseCP.getValue());
         calcDisplayValue();
         //jLabel2.setText("" + jump.calcCosts());
-    }//GEN-LAST:event_jSpinner1StateChanged
+    }//GEN-LAST:event_spnJumpBaseCPStateChanged
 
     //Option List Change
-    private void jList2ValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_jList2ValueChanged
+    private void pnOptionListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_pnOptionListValueChanged
         if (mouseIsDragging) {
             return;
         }
-        int[] selected = jList2.getSelectedIndices();
+        int[] selected = pnOptionList.getSelectedIndices();
         //System.out.println("Selected: ");
         if (selected.length == 1) {
-            loadOption(jList2.getSelectedIndex());
-            jump.setSelectedOption(jList2.getSelectedIndex());
+            loadOption(pnOptionList.getSelectedIndex());
+            jump.setSelectedOption(pnOptionList.getSelectedIndex());
             calcDisplayValue();
         } else if (selected.length > 1) {
             int value = 0;
@@ -1772,7 +1791,7 @@ public class TrackerFrame extends javax.swing.JFrame {
             }
             setDisplayValue(value);
         }
-    }//GEN-LAST:event_jList2ValueChanged
+    }//GEN-LAST:event_pnOptionListValueChanged
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
         if (jumper == null) {
@@ -1802,14 +1821,14 @@ public class TrackerFrame extends javax.swing.JFrame {
         runSearch();
     }//GEN-LAST:event_jComboBox3ActionPerformed
 
-    private void jCheckBox4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox4ActionPerformed
-        option.setActive(jCheckBox4.isSelected());
+    private void chkActiveOptionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkActiveOptionActionPerformed
+        option.setActive(chkActiveOption.isSelected());
 //        jLabel2.setText("" + jump.calcCosts());
         calcDisplayValue();
         //jList2.setSelectedIndex(index);
         int index = model2.indexOf(option);
-        jList2.setSelectedIndex(index);
-    }//GEN-LAST:event_jCheckBox4ActionPerformed
+        pnOptionList.setSelectedIndex(index);
+    }//GEN-LAST:event_chkActiveOptionActionPerformed
 
     //isActive Search
     private void jCheckBox5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox5ActionPerformed
@@ -1821,8 +1840,8 @@ public class TrackerFrame extends javax.swing.JFrame {
         jump.getOptionList().forEach((o) -> {
             o.setActive(true);
         });
-        jCheckBox4.setSelected(true);
-        jCheckBox4ActionPerformed(evt);
+        chkActiveOption.setSelected(true);
+        chkActiveOptionActionPerformed(evt);
     }//GEN-LAST:event_jMenuItem10ActionPerformed
 
     //Set All Inactive
@@ -1830,8 +1849,8 @@ public class TrackerFrame extends javax.swing.JFrame {
         jump.getOptionList().forEach((o) -> {
             o.setActive(false);
         });
-        jCheckBox4.setSelected(false);
-        jCheckBox4ActionPerformed(evt);
+        chkActiveOption.setSelected(false);
+        chkActiveOptionActionPerformed(evt);
     }//GEN-LAST:event_jMenuItem11ActionPerformed
 
     TypeFrame typeFrame;
@@ -1845,14 +1864,14 @@ public class TrackerFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem12ActionPerformed
 
     //Import Jump Menu Item
-    private void jMenuItem13ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem13ActionPerformed
+    private void mniImportJumpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniImportJumpActionPerformed
         importJump();
-    }//GEN-LAST:event_jMenuItem13ActionPerformed
+    }//GEN-LAST:event_mniImportJumpActionPerformed
 
     //Export Jump Menu Item
-    private void jMenuItem14ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem14ActionPerformed
+    private void mniExportJumpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniExportJumpActionPerformed
         exportJump();
-    }//GEN-LAST:event_jMenuItem14ActionPerformed
+    }//GEN-LAST:event_mniExportJumpActionPerformed
 
     private void jCheckBoxMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxMenuItem2ActionPerformed
         jumper.setPointsLinked(jCheckBoxMenuItem2.isSelected());
@@ -1870,7 +1889,7 @@ public class TrackerFrame extends javax.swing.JFrame {
         copyOptionTo();
     }//GEN-LAST:event_jMenuItem16ActionPerformed
 
-    private void jList2MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jList2MousePressed
+    private void pnOptionListMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pnOptionListMousePressed
         if (evt.getModifiers() == MouseEvent.BUTTON3_MASK) {
             JPopupMenu menu = new JPopupMenu();
             JMenuItem item = new JMenuItem("Set Active");
@@ -1892,9 +1911,9 @@ public class TrackerFrame extends javax.swing.JFrame {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     newOption();
-                    jList2.setSelectedValue(option, true);
-                    jTextField3.requestFocus();
-                    jTextField3.selectAll();
+                    pnOptionList.setSelectedValue(option, true);
+                    fldOptionName.requestFocus();
+                    fldOptionName.selectAll();
                 }
             });
             JMenuItem item4 = new JMenuItem("Copy To");
@@ -1920,18 +1939,18 @@ public class TrackerFrame extends javax.swing.JFrame {
             menu.add(item4);
             menu.add(new JSeparator());
             menu.add(item5);
-            menu.show(jList2, evt.getX() + 1, evt.getY() + 1);
+            menu.show(pnOptionList, evt.getX() + 1, evt.getY() + 1);
         }
-    }//GEN-LAST:event_jList2MousePressed
+    }//GEN-LAST:event_pnOptionListMousePressed
 
     private void jMenuItem17ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem17ActionPerformed
         themeShift();
     }//GEN-LAST:event_jMenuItem17ActionPerformed
 
     //Delete Jump Menu Item
-    private void jMenuItem18ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem18ActionPerformed
+    private void mniDeleteJumpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniDeleteJumpActionPerformed
         deleteSelectedJump();
-    }//GEN-LAST:event_jMenuItem18ActionPerformed
+    }//GEN-LAST:event_mniDeleteJumpActionPerformed
 
     //Delete Option Menu Item
     private void jMenuItem19ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem19ActionPerformed
@@ -1946,7 +1965,7 @@ public class TrackerFrame extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jMenuItem20ActionPerformed
 
-    private void jMenuItem21ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem21ActionPerformed
+    private void mniBackupJumperActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniBackupJumperActionPerformed
         if (!backupPath.exists()) {
             try {
                 backupPath.mkdirs();
@@ -1956,23 +1975,23 @@ public class TrackerFrame extends javax.swing.JFrame {
             }
         }
 
-    }//GEN-LAST:event_jMenuItem21ActionPerformed
+    }//GEN-LAST:event_mniBackupJumperActionPerformed
 
-    private void jMenuItem22ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem22ActionPerformed
+    private void mniAddJumpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniAddJumpActionPerformed
         newJump();
-        jList1.setSelectedValue(jump, true);
+        pnJumpList.setSelectedValue(jump, true);
         jTextField2.requestFocus();
         jTextField2.selectAll();
-    }//GEN-LAST:event_jMenuItem22ActionPerformed
+    }//GEN-LAST:event_mniAddJumpActionPerformed
 
     private void jMenuItem23ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem23ActionPerformed
         newOption();
-        jList2.setSelectedValue(option, true);
-        jTextField3.requestFocus();
-        jTextField3.selectAll();
+        pnOptionList.setSelectedValue(option, true);
+        fldOptionName.requestFocus();
+        fldOptionName.selectAll();
     }//GEN-LAST:event_jMenuItem23ActionPerformed
 
-    private void jList1MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jList1MousePressed
+    private void pnJumpListMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pnJumpListMousePressed
         if (evt.getModifiers() == MouseEvent.BUTTON3_MASK) {
             JPopupMenu menu = new JPopupMenu();
             JMenuItem item = new JMenuItem("Output Selections");
@@ -2022,21 +2041,21 @@ public class TrackerFrame extends javax.swing.JFrame {
             menu.add(item4);
             menu.add(new JSeparator());
             menu.add(item5);
-            menu.show(jList1, evt.getX() + 1, evt.getY() + 1);
+            menu.show(pnJumpList, evt.getX() + 1, evt.getY() + 1);
         }
-    }//GEN-LAST:event_jList1MousePressed
+    }//GEN-LAST:event_pnJumpListMousePressed
 
-    private void jCheckBoxMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxMenuItem3ActionPerformed
-        if (jCheckBoxMenuItem3.isSelected()) {
+    private void mniAutoSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniAutoSaveActionPerformed
+        if (mniAutoSave.isSelected()) {
             if (!autosave) {
                 autosave();
             }
         } else {
             autosave = false;
         }
-    }//GEN-LAST:event_jCheckBoxMenuItem3ActionPerformed
+    }//GEN-LAST:event_mniAutoSaveActionPerformed
 
-    private void jTextArea1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextArea1KeyPressed
+    private void fldOptionDescriptionKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_fldOptionDescriptionKeyPressed
         if (evt.isControlDown()) {
             if (evt.getKeyCode() == KeyEvent.VK_Z) {
                 if (manager1.canUndo()) {
@@ -2048,13 +2067,13 @@ public class TrackerFrame extends javax.swing.JFrame {
                 }
             }
         }
-    }//GEN-LAST:event_jTextArea1KeyPressed
+    }//GEN-LAST:event_fldOptionDescriptionKeyPressed
 
     private void formWindowLostFocus(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowLostFocus
         saveJumper();
     }//GEN-LAST:event_formWindowLostFocus
 
-    private void jTextArea2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextArea2KeyPressed
+    private void fldOptionNotesKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_fldOptionNotesKeyPressed
         if (evt.isControlDown()) {
             if (evt.getKeyCode() == KeyEvent.VK_Z) {
                 if (manager2.canUndo()) {
@@ -2066,14 +2085,59 @@ public class TrackerFrame extends javax.swing.JFrame {
                 }
             }
         }
-    }//GEN-LAST:event_jTextArea2KeyPressed
+    }//GEN-LAST:event_fldOptionNotesKeyPressed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         newOption();
-        jList2.setSelectedValue(option, true);
-        jTextField3.requestFocus();
-        jTextField3.selectAll();
+        pnOptionList.setSelectedValue(option, true);
+        fldOptionName.requestFocus();
+        fldOptionName.selectAll();
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void mniImportJumperCSVActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniImportJumperCSVActionPerformed
+        String[] list = getNameList(jumperPath.listFiles(), ".csv");
+        String s = (String) JOptionPane.showInputDialog(this,
+                "", "Select CSV to Load", JOptionPane.PLAIN_MESSAGE, null,
+                list, list[0]);
+        
+        CSVtoXML xmlTest = new CSVtoXML();
+        System.out.println(jumperPath + "\\" + s + ".csv");
+        xmlTest.convertFile(
+        		jumperPath + "\\" + s + ".csv", 
+        		jumperPath + "\\" + "importedCSV" + ".jt", 
+        		",");
+        
+        try {
+            CSVtoXML.clean(jumperPath + "\\" + "importedCSV" + ".jt");
+        } catch (IOException ex) {
+            Logger.getLogger(TrackerFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }//GEN-LAST:event_mniImportJumperCSVActionPerformed
+
+    private void mniImportJumpCSVActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniImportJumpCSVActionPerformed
+        
+        FileDialog fd = new FileDialog(this, "Choose a File", FileDialog.LOAD);
+        fd.setVisible(true);
+        
+        String[] list = getNameList(fd.getFiles(),".csv");
+        
+        System.out.println(fd.getDirectory());
+        System.out.println(fd.getFile());
+        
+        CSVtoXML xmlTest = new CSVtoXML();
+        xmlTest.convertFile(
+        		fd.getDirectory() + "\\" + fd.getFile(), 
+        		jumpPath + "\\" + "importedJumpCSV" + ".jump", 
+        		",");
+        
+        try {
+            CSVtoXML.cleanJump(jumpPath + "\\" + "importedJumpCSV" + ".jump");
+        } catch (IOException ex) {
+            Logger.getLogger(TrackerFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        importJump();
+    }//GEN-LAST:event_mniImportJumpCSVActionPerformed
 // </editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="Event Extras">
@@ -2085,13 +2149,13 @@ public class TrackerFrame extends javax.swing.JFrame {
     }
 
     public void activateSelectedOptionsFromList(boolean a) {
-        for (int index : jList2.getSelectedIndices()) {
+        for (int index : pnOptionList.getSelectedIndices()) {
             Object o = model2.get(index);
             if (o instanceof Option) {
                 ((Option) o).setActive(a);
             }
         }
-        jCheckBox4.setSelected(option.isActive());
+        chkActiveOption.setSelected(option.isActive());
         this.calcDisplayValue();
     }
 
@@ -2132,13 +2196,13 @@ public class TrackerFrame extends javax.swing.JFrame {
         }
         jumper.addJump(newJump);
         model1.addElement(newJump);
-        jList1.setSelectedValue(newJump, true);
+        pnJumpList.setSelectedValue(newJump, true);
     }
 
     private void deleteSelectedJump() {
 
-        int toDeleteIndex = jList1.getSelectedIndex();
-        int[] selected = jList1.getSelectedIndices();
+        int toDeleteIndex = pnJumpList.getSelectedIndex();
+        int[] selected = pnJumpList.getSelectedIndices();
         Jump[] list = new Jump[selected.length];
 
         for (int i = 0; i < list.length; i++) {
@@ -2155,23 +2219,23 @@ public class TrackerFrame extends javax.swing.JFrame {
         if (model1.size() == 0) {
             newJump();
         }
-        jList1.setSelectedIndex(0);
+        pnJumpList.setSelectedIndex(0);
 
         if (model1.size() == 0) {
             newOption();
         }
         if (toDeleteIndex < jumper.getJumpList().size()) {
-            jList1.setSelectedIndex(toDeleteIndex);
+            pnJumpList.setSelectedIndex(toDeleteIndex);
         } else if (toDeleteIndex > 0) {
-            jList1.setSelectedIndex(toDeleteIndex - 1);
+            pnJumpList.setSelectedIndex(toDeleteIndex - 1);
         } else {
-            jList1.setSelectedIndex(0);
+            pnJumpList.setSelectedIndex(0);
         }
     }
 
     private void deleteSelectedOptions() {
-        int toDeleteIndex = jList2.getSelectedIndex();
-        int[] selected = jList2.getSelectedIndices();
+        int toDeleteIndex = pnOptionList.getSelectedIndex();
+        int[] selected = pnOptionList.getSelectedIndices();
         Option[] list = new Option[selected.length];
 
         for (int i = 0; i < list.length; i++) {
@@ -2195,11 +2259,11 @@ public class TrackerFrame extends javax.swing.JFrame {
             newOption();
         }
         if (toDeleteIndex < jump.getOptionList().size()) {
-            jList2.setSelectedIndex(toDeleteIndex);
+            pnOptionList.setSelectedIndex(toDeleteIndex);
         } else if (toDeleteIndex > 0) {
-            jList2.setSelectedIndex(toDeleteIndex - 1);
+            pnOptionList.setSelectedIndex(toDeleteIndex - 1);
         } else {
-            jList2.setSelectedIndex(0);
+            pnOptionList.setSelectedIndex(0);
         }
     }
 
@@ -2209,7 +2273,7 @@ public class TrackerFrame extends javax.swing.JFrame {
             list[i] = jumper.getJump(i).getName();
         }
 
-        int[] selected = jList2.getSelectedIndices();
+        int[] selected = pnOptionList.getSelectedIndices();
 
         if (copyTo.equals("") || list.length > 0 && !Arrays.stream(list).anyMatch(copyTo::equals)) {
             copyTo = list[0];
@@ -2394,65 +2458,45 @@ public class TrackerFrame extends javax.swing.JFrame {
 
     // <editor-fold defaultstate="collapsed" desc="Declaration Code"> 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAddJump;
+    private javax.swing.JButton btnAddOption;
+    private javax.swing.JButton btnLoadJumper;
+    private javax.swing.JButton btnSaveJumper;
     private javax.swing.ButtonGroup buttonGroup1;
-    private javax.swing.JButton jButton1;
+    private javax.swing.JComboBox<String> cbOptionType;
+    private javax.swing.DefaultComboBoxModel defaultComboBoxModel1;
+    private javax.swing.JCheckBox chkActiveOption;
+    private javax.swing.JCheckBox chkChainOption;
+    private javax.swing.JTextArea fldOptionDescription;
+    private javax.swing.JTextField fldOptionName;
+    private javax.swing.JTextArea fldOptionNotes;
     private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton5;
-    private javax.swing.JButton jButton6;
-    private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JCheckBox jCheckBox2;
     private javax.swing.JCheckBox jCheckBox3;
-    private javax.swing.JCheckBox jCheckBox4;
     private javax.swing.JCheckBox jCheckBox5;
     private javax.swing.JCheckBoxMenuItem jCheckBoxMenuItem1;
     private javax.swing.JCheckBoxMenuItem jCheckBoxMenuItem2;
-    private javax.swing.JCheckBoxMenuItem jCheckBoxMenuItem3;
-    private javax.swing.JComboBox<String> jComboBox1;
-    private javax.swing.DefaultComboBoxModel defaultComboBoxModel1;
     private javax.swing.JComboBox<String> jComboBox2;
     private javax.swing.DefaultComboBoxModel defaultComboBoxModel2;
     private javax.swing.JComboBox<String> jComboBox3;
     private javax.swing.DefaultComboBoxModel defaultComboBoxModel3;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.DefaultListModel model1;
-    private javax.swing.JList<String> jList1;
-    private javax.swing.DefaultListModel model2;
-    private javax.swing.JList<String> jList2;
     private javax.swing.DefaultListModel model3;
     private javax.swing.JList<String> jList3;
-    private javax.swing.JMenu jMenu1;
-    private javax.swing.JMenu jMenu2;
-    private javax.swing.JMenu jMenu3;
-    private javax.swing.JMenu jMenu4;
-    private javax.swing.JMenu jMenu5;
     private javax.swing.JMenu jMenu6;
-    private javax.swing.JMenu jMenu7;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem10;
     private javax.swing.JMenuItem jMenuItem11;
     private javax.swing.JMenuItem jMenuItem12;
-    private javax.swing.JMenuItem jMenuItem13;
-    private javax.swing.JMenuItem jMenuItem14;
     private javax.swing.JMenuItem jMenuItem15;
     private javax.swing.JMenuItem jMenuItem16;
     private javax.swing.JMenuItem jMenuItem17;
-    private javax.swing.JMenuItem jMenuItem18;
     private javax.swing.JMenuItem jMenuItem19;
-    private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem20;
-    private javax.swing.JMenuItem jMenuItem21;
-    private javax.swing.JMenuItem jMenuItem22;
     private javax.swing.JMenuItem jMenuItem23;
-    private javax.swing.JMenuItem jMenuItem3;
-    private javax.swing.JMenuItem jMenuItem4;
-    private javax.swing.JMenuItem jMenuItem5;
     private javax.swing.JMenuItem jMenuItem6;
     private javax.swing.JMenuItem jMenuItem7;
     private javax.swing.JMenuItem jMenuItem8;
@@ -2473,6 +2517,7 @@ public class TrackerFrame extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JScrollPane jScrollPane7;
     private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JPopupMenu.Separator jSeparator10;
     private javax.swing.JPopupMenu.Separator jSeparator2;
     private javax.swing.JPopupMenu.Separator jSeparator3;
     private javax.swing.JPopupMenu.Separator jSeparator4;
@@ -2481,21 +2526,43 @@ public class TrackerFrame extends javax.swing.JFrame {
     private javax.swing.JPopupMenu.Separator jSeparator7;
     private javax.swing.JPopupMenu.Separator jSeparator8;
     private javax.swing.JPopupMenu.Separator jSeparator9;
-    private javax.swing.JSpinner jSpinner1;
-    private SpinnerNumberModel spinnerModel1;
-    private javax.swing.JSpinner jSpinner2;
-    private SpinnerNumberModel spinnerModel2;
     private javax.swing.JSpinner jSpinner3;
     private SpinnerNumberModel spinnerModel3;
     private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JTextArea jTextArea1;
-    private javax.swing.JTextArea jTextArea2;
     private javax.swing.JTextArea jTextArea3;
     private javax.swing.JTextArea jTextArea4;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
     private javax.swing.JTextField jTextField4;
+    private javax.swing.JLabel lblAvailableCP;
+    private javax.swing.JLabel lblCP;
+    private javax.swing.JMenuItem mniAddJump;
+    private javax.swing.JCheckBoxMenuItem mniAutoSave;
+    private javax.swing.JMenuItem mniBackupJumper;
+    private javax.swing.JMenuItem mniDeleteJump;
+    private javax.swing.JMenuItem mniDeleteJumper;
+    private javax.swing.JMenuItem mniExit;
+    private javax.swing.JMenuItem mniExportJump;
+    private javax.swing.JMenuItem mniImportJump;
+    private javax.swing.JMenuItem mniImportJumpCSV;
+    private javax.swing.JMenuItem mniImportJumperCSV;
+    private javax.swing.JMenuItem mniLoadJumper;
+    private javax.swing.JMenuItem mniNewJumper;
+    private javax.swing.JMenuItem mniSaveJumper;
+    private javax.swing.JMenu mnuConfig;
+    private javax.swing.JMenu mnuFile;
+    private javax.swing.JMenu mnuHelp;
+    private javax.swing.JMenu mnuJump;
+    private javax.swing.JMenu mnuJumper;
+    private javax.swing.JMenu mnuOption;
+    private javax.swing.DefaultListModel model1;
+    private javax.swing.JList<String> pnJumpList;
+    private javax.swing.DefaultListModel model2;
+    private javax.swing.JList<String> pnOptionList;
+    private javax.swing.JSpinner spnJumpBaseCP;
+    private SpinnerNumberModel spinnerModel1;
+    private javax.swing.JSpinner spnOptionCost;
+    private SpinnerNumberModel spinnerModel2;
     // End of variables declaration//GEN-END:variables
 // </editor-fold>
 

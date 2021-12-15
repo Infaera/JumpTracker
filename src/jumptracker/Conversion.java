@@ -91,7 +91,8 @@ public class Conversion {
 
         text = jumper.getJumpList().stream().map((j) -> jumpToHTML(j) + "\n").reduce(text, String::concat);
 
-        text += "</jumper>";
+        text += "</jumper>\n";
+        text += "</jumptracker>";
         text = text.replace(".*", ". *").replace("(+", "( +");
 
         return text;
@@ -161,6 +162,8 @@ public class Conversion {
 
         return text;
     }
+    
+    
 
     public static Jump HTMLToJump(String text) {
         Jump jump = new Jump();
