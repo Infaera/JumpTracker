@@ -450,7 +450,7 @@
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="jLabel2" max="32767" attributes="0"/>
                           </Group>
-                          <Component id="jTextField2" alignment="0" pref="150" max="32767" attributes="0"/>
+                          <Component id="jTextField2" alignment="0" max="32767" attributes="0"/>
                           <Component id="jButton3" alignment="0" max="32767" attributes="0"/>
                           <Component id="jScrollPane2" alignment="0" pref="0" max="32767" attributes="0"/>
                           <Component id="jButton2" max="32767" attributes="0"/>
@@ -543,9 +543,6 @@
               <SubComponents>
                 <Component class="javax.swing.JList" name="jList2">
                   <Properties>
-                    <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                      <Font name="Dialog" size="12" style="1"/>
-                    </Property>
                     <Property name="model" type="javax.swing.ListModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                       <Connection code="model2" type="code"/>
                     </Property>
@@ -723,9 +720,6 @@
               <SubComponents>
                 <Component class="javax.swing.JList" name="jList1">
                   <Properties>
-                    <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                      <Font name="Dialog" size="12" style="1"/>
-                    </Property>
                     <Property name="model" type="javax.swing.ListModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                       <Connection code="model1" type="code"/>
                     </Property>
@@ -966,9 +960,6 @@
               <SubComponents>
                 <Component class="javax.swing.JList" name="jList3">
                   <Properties>
-                    <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                      <Font name="Dialog" size="12" style="1"/>
-                    </Property>
                     <Property name="model" type="javax.swing.ListModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                       <Connection code="model3" type="code"/>
                     </Property>

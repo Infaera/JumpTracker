@@ -29,12 +29,12 @@ public class TrackerFrame extends javax.swing.JFrame {
             versionLink = "https://infaera.neocities.org/JumpTracker/JumpTrackerInfo.html",
             reddit = "https://www.reddit.com/r/JumpChain/comments/hbjstz/jump_tracker/?sort=new";
     //vlink = "https://docs.google.com/document/d/1MAYkleEIkNsMyw7OM1XLYxD-pfVoLHG4OJVRQXGiSsE/edit?usp=sharing";
-    File basicPath = new File(new File("").getAbsolutePath() + "\\Jump Tracker\\"),
-            jumperPath = new File(basicPath + "\\Jumper\\"),
-            jumpPath = new File(basicPath + "\\Jump\\"),
-            backupPath = new File(basicPath + "\\Backup\\"),
-            trackerFile = new File(basicPath + "\\Tracker.ini"),
-            jumperFile = new File(jumperPath + "\\Jumper.jt");
+    File basicPath = new File("Jump Tracker").getAbsoluteFile(),
+            jumperPath = new File(basicPath.toString(), "Jumper"),
+            jumpPath = new File(basicPath.toString(), "Jump"),
+            backupPath = new File(basicPath.toString(), "Backup"),
+            trackerFile = new File(basicPath.toString(), "Tracker.ini"),
+            jumperFile = new File(jumperPath.toString(), "Jumper.jt");
 
     private static final Color DARK_RED = new Color(124, 0, 0);
     private static final Color LIGHT_RED = new Color(255, 25, 25);
@@ -203,8 +203,8 @@ public class TrackerFrame extends javax.swing.JFrame {
                 }
                 if (f.getName().endsWith(".jt")) {
                     String data = loadData(f);
-                    File nfile = new File(jumperPath + "\\" + f.getName());
-                    File bfile = new File(backupPath + "\\" + f.getName());
+                    File nfile = new File(jumperPath, f.getName());
+                    File bfile = new File(backupPath, f.getName());
 
                     if (!nfile.exists()) {
                         if (!nfile.exists()) {
@@ -264,7 +264,7 @@ public class TrackerFrame extends javax.swing.JFrame {
                 String[] line = s.split("=");
                 switch (line[0]) {
                     case "file":
-                        jumperFile = new File(jumperPath + "\\" + line[1]);
+                        jumperFile = new File(jumperPath, line[1]);
                         break;
                     case "location":
                         String[] la = s.split("=")[1].split(",");
@@ -281,7 +281,7 @@ public class TrackerFrame extends javax.swing.JFrame {
                         break;
                     default:
                         if (s.contains(".jt")) {
-                            jumperFile = new File(jumperPath + "\\" + s);
+                            jumperFile = new File(jumperPath, s);
                         }
                         break;
                 }
@@ -347,7 +347,7 @@ public class TrackerFrame extends javax.swing.JFrame {
     }
 
     private void createJumper() {
-        jumperFile = new File(jumperPath + "\\Jumper.jt");
+        jumperFile = new File(jumperPath, "Jumper.jt");
         jumper = new Jumper("Jumper");
         jTextField1.setText("Jumper");
 
@@ -516,7 +516,7 @@ public class TrackerFrame extends javax.swing.JFrame {
                 list, list[0]);
 
         if ((s != null) && (s.length() > 0)) {
-            new File(jumperPath + "\\" + s + ".jt").delete();
+            new File(jumperPath, s + ".jt").delete();
             if (jumper.getName().equals(s)) {
                 resetJumper();
                 //createJumper();
@@ -532,7 +532,7 @@ public class TrackerFrame extends javax.swing.JFrame {
                 list, list[0]);
 
         if ((s != null) && (s.length() > 0)) {
-            jumperFile = new File(jumperPath + "\\" + s + ".jt");
+            jumperFile = new File(jumperPath, s + ".jt");
             loadJumper();
             saveTracker();
         }
@@ -1950,7 +1950,7 @@ public class TrackerFrame extends javax.swing.JFrame {
         if (!backupPath.exists()) {
             try {
                 backupPath.mkdirs();
-                File bPath = new File(backupPath + "\\" + jumper.getName() + ".jt");
+                File bPath = new File(backupPath, jumper.getName() + ".jt");
                 saveData(bPath, Conversion.jumperToHTML(jumper));
             } catch (Exception e) {
             }
@@ -2108,13 +2108,13 @@ public class TrackerFrame extends javax.swing.JFrame {
         }
         String text;
         text = Conversion.jumpToHTML(jump);
-        File file = new File(jumpPath + "\\" + jump.getName() + ".jump");
+        File file = new File(jumpPath, jump.getName() + ".jump");
         saveData(file, text);
     }
 
     private void importJump() {
         String selection = getJumpSelection();
-        File path = new File(jumpPath + "\\" + selection + ".jump");
+        File path = new File(jumpPath, selection + ".jump");
         if (!path.exists()) {
             return;
         }
@@ -2312,7 +2312,7 @@ public class TrackerFrame extends javax.swing.JFrame {
             }
         } else {
             File temp = jumperFile;
-            jumperFile = new File(jumperPath + "\\" + jTextField1.getText() + ".jt");
+            jumperFile = new File(jumperPath, jTextField1.getText() + ".jt");
             saveData(jumperFile, Conversion.jumperToHTML(jumper));
             saveTracker();
             temp.delete();
