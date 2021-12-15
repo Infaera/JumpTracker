@@ -1,0 +1,9 @@
+jumpname,supplement,points,stepvalue,optionname,type,points,chain,active,description,notes
+rwby,false,1000,25,origin,origin,0,false,true,,This is a notes
+,,,,Aura,Perk,-50,false,false,Your aura has been Awakened.,Aura is king
+,,,,Semblance,Perk,-50,false,false,Your semblance has been Awakened.,Semblance is unique
+,,,,Aura Surge,Perk,-50,false,false,Your aura can surge back to full once per battle.,Aura is bea
+Dark Souls,false,1000,25,origin,origin,0,false,true,This is a description,This is a notes
+,,,,Dark Mark,Perk,-50,false,false,"Lose any exp not locked in upon death, but revive at the last checkpoint.",Death is only the beginning.
+,,,,Master Key,Item,-50,false,false,Unlocks any door.,
+,,,,Soul Empowerment,Perk,-50,false,false,Defeating opponents awards you soul power.,Soul power can be used to permanently increase one of your attributes.

@@ -1,0 +1,5 @@
+
+*.class
+build/built-jar.properties
+Jump Tracker/Tracker.ini
+nbproject/private/private.properties
