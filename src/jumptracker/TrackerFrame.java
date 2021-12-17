@@ -368,6 +368,43 @@ public class TrackerFrame extends javax.swing.JFrame {
         model1.addElement(jump);
         model2.removeAllElements();
         newOption();
+        ArrayList<Option> tempList = new ArrayList<Option>();
+        
+        //checks each jump for options
+        for(Jump jumpl : jumper.getJumpList()){
+            //grabs all the options info into temporary option
+            //double checks to make sure it's not creating a duplicate chain option
+            for(Option option: jumpl.getOptionList()){
+                if(option.chain){
+                    Option temp = new Option(option.name);
+                    temp.type = option.type;
+                    temp.active = option.active;
+                    temp.chain = option.chain;
+                    temp.description = option.description;
+                    temp.setJumpName(jump.getName());
+                    temp.notes = option.notes;
+                    if(option.points > 0){
+                        temp.points = option.points;
+                    }else{
+                        temp.points = 0;
+                    }
+                    temp.scrollPoint = option.scrollPoint;
+                    boolean duplicate = false;
+                    for(Option dupCheck: tempList){
+                        if(dupCheck.name.equals(temp.name) && dupCheck.description.equals(temp.description)){
+                            duplicate = true;
+                        }
+                    }
+                    if(!duplicate){
+                        tempList.add(temp);
+                    }
+                }
+            }
+        }
+        for(Option option: tempList){
+            jump.addOption(option);
+            model2.addElement(option);
+        }
     }
 
     public void newOption() {
