@@ -383,7 +383,11 @@ public class TrackerFrame extends javax.swing.JFrame {
                     temp.description = option.description;
                     temp.setJumpName(jump.getName());
                     temp.notes = option.notes;
-                    temp.points = 0;
+                    if(option.points > 0){
+                        temp.points = option.points;
+                    }else{
+                        temp.points = 0;
+                    }
                     temp.scrollPoint = option.scrollPoint;
                     boolean duplicate = false;
                     for(Option dupCheck: tempList){
