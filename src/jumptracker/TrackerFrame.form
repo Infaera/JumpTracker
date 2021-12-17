@@ -410,7 +410,7 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Component id="jTabbedPane1" alignment="0" max="32767" attributes="0"/>
+          <Component id="jTabbedPane1" alignment="0" pref="600" max="32767" attributes="0"/>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
@@ -460,25 +460,32 @@
                           <Component id="jScrollPane1" alignment="0" pref="0" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                          <Group type="102" alignment="0" attributes="0">
-                              <Component id="lblCP" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="spnJumpBaseCP" min="-2" pref="66" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="lblAvailableCP" max="32767" attributes="0"/>
-                          </Group>
-                          <Component id="jTextField2" alignment="0" max="32767" attributes="0"/>
-                          <Component id="btnAddOption" alignment="0" max="32767" attributes="0"/>
-                          <Component id="jScrollPane2" alignment="0" pref="0" max="32767" attributes="0"/>
-                          <Component id="jButton2" max="32767" attributes="0"/>
-                      </Group>
-                      <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="1" attributes="0">
-                          <Component id="jScrollPane4" pref="241" max="32767" attributes="0"/>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="btnAddMulti" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="spnOptionCount" min="-2" pref="44" max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
+                              <Component id="btnAddOption" alignment="0" pref="173" max="32767" attributes="0"/>
+                              <Group type="102" alignment="1" attributes="0">
+                                  <Component id="lblCP" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                  <Component id="spnJumpBaseCP" min="-2" pref="78" max="-2" attributes="0"/>
+                                  <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
+                                  <Component id="lblAvailableCP" min="-2" pref="30" max="-2" attributes="0"/>
+                                  <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
+                              </Group>
+                              <Component id="jTextField2" max="32767" attributes="0"/>
+                              <Component id="jScrollPane2" pref="0" max="32767" attributes="0"/>
+                          </Group>
+                      </Group>
+                      <EmptySpace max="32767" attributes="0"/>
+                      <Group type="103" groupAlignment="1" attributes="0">
+                          <Component id="jScrollPane4" pref="246" max="32767" attributes="0"/>
                           <Component id="fldOptionName" alignment="1" max="32767" attributes="0"/>
                           <Group type="102" alignment="1" attributes="0">
-                              <Component id="cbOptionType" pref="121" max="32767" attributes="0"/>
+                              <Component id="cbOptionType" pref="120" max="32767" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="spnOptionCost" min="-2" pref="70" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
@@ -486,7 +493,7 @@
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="chkChainOption" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <Component id="jScrollPane3" alignment="0" pref="241" max="32767" attributes="0"/>
+                          <Component id="jScrollPane3" alignment="0" pref="246" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
@@ -510,13 +517,10 @@
                                       <Component id="lblAvailableCP" alignment="3" min="-2" max="-2" attributes="0"/>
                                       <Component id="cbOptionType" alignment="3" min="-2" max="-2" attributes="0"/>
                                       <Component id="spnOptionCost" alignment="3" min="-2" pref="24" max="-2" attributes="0"/>
-                                  </Group>
-                                  <Group type="102" alignment="0" attributes="0">
-                                      <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
-                                      <Component id="lblCP" min="-2" pref="13" max="-2" attributes="0"/>
+                                      <Component id="lblCP" alignment="3" min="-2" pref="13" max="-2" attributes="0"/>
                                   </Group>
                                   <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
-                                      <Component id="btnLoadJumper" pref="0" max="32767" attributes="0"/>
+                                      <Component id="btnLoadJumper" max="32767" attributes="0"/>
                                       <Component id="btnSaveJumper" min="-2" pref="22" max="-2" attributes="0"/>
                                   </Group>
                               </Group>
@@ -531,7 +535,10 @@
                                   <Group type="102" attributes="0">
                                       <Component id="jScrollPane2" max="32767" attributes="0"/>
                                       <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="jButton2" min="-2" pref="17" max="-2" attributes="0"/>
+                                      <Group type="103" groupAlignment="3" attributes="0">
+                                          <Component id="btnAddMulti" alignment="3" min="-2" pref="17" max="-2" attributes="0"/>
+                                          <Component id="spnOptionCount" alignment="3" max="32767" attributes="0"/>
+                                      </Group>
                                   </Group>
                               </Group>
                           </Group>
@@ -541,7 +548,7 @@
                                   <Component id="chkChainOption" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace type="separate" max="-2" attributes="0"/>
-                              <Component id="jScrollPane3" pref="250" max="32767" attributes="0"/>
+                              <Component id="jScrollPane3" pref="260" max="32767" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="jScrollPane4" min="-2" max="-2" attributes="0"/>
                           </Group>
@@ -812,13 +819,15 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="chkActiveOptionActionPerformed"/>
               </Events>
             </Component>
-            <Component class="javax.swing.JButton" name="jButton2">
+            <Component class="javax.swing.JButton" name="btnAddMulti">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Add Multi Option"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton2ActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnAddMultiActionPerformed"/>
               </Events>
+            </Component>
+            <Component class="javax.swing.JSpinner" name="spnOptionCount">
             </Component>
           </SubComponents>
         </Container>
@@ -855,7 +864,7 @@
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="jScrollPane7" pref="415" max="32767" attributes="0"/>
+                                  <Component id="jScrollPane7" pref="432" max="32767" attributes="0"/>
                                   <Component id="jScrollPane6" max="32767" attributes="0"/>
                               </Group>
                           </Group>

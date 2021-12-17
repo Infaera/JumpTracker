@@ -3,3 +3,5 @@
 build/built-jar.properties
 Jump Tracker/Tracker.ini
 nbproject/private/private.properties
+*.jt
+nbproject/private/private.xml
