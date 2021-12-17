@@ -1973,6 +1973,9 @@ public class TrackerFrame extends javax.swing.JFrame {
                 saveData(bPath, Conversion.jumperToHTML(jumper));
             } catch (Exception e) {
             }
+        }else{
+            File bPath = new File(backupPath, jumper.getName() + ".jt");
+            saveData(bPath, Conversion.jumperToHTML(jumper));
         }
 
     }//GEN-LAST:event_mniBackupJumperActionPerformed
